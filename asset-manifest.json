@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/Graph-Visualizer/static/js/main.c0ce0916.chunk.js",
+    "main.js.map": "/Graph-Visualizer/static/js/main.c0ce0916.chunk.js.map",
+    "runtime-main.js": "/Graph-Visualizer/static/js/runtime-main.4d5b9570.js",
+    "runtime-main.js.map": "/Graph-Visualizer/static/js/runtime-main.4d5b9570.js.map",
+    "static/js/2.d6be0a10.chunk.js": "/Graph-Visualizer/static/js/2.d6be0a10.chunk.js",
+    "static/js/2.d6be0a10.chunk.js.map": "/Graph-Visualizer/static/js/2.d6be0a10.chunk.js.map",
+    "index.html": "/Graph-Visualizer/index.html",
+    "static/js/2.d6be0a10.chunk.js.LICENSE.txt": "/Graph-Visualizer/static/js/2.d6be0a10.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4d5b9570.js",
+    "static/js/2.d6be0a10.chunk.js",
+    "static/js/main.c0ce0916.chunk.js"
+  ]
+}
