@@ -14,6 +14,7 @@ const graphStyle = {
 
 let vertexIDCounter = 0
 const App = () => {
+  const [ notice, setNotice ] = useState('Welcome to Graph Visualizer!')
   const [ elements, setElements ] = useState([])
   const [ selectedEdge, setSelectedEdge ] = useState(null)
   const [ selectedEndpoint, setSelectedEndpoint ] = useState(null)
@@ -39,18 +40,22 @@ const App = () => {
   const addNewEdge = (event, node) => {
     if (selectedEndpoint === null) {
       setSelectedEndpoint(node)
+      setNotice(`Node ${node.id.toString()} is currently selected. Double click on another node to create an edge`)
       return
     } else {
       if (node.id === selectedEndpoint.id) {
         setSelectedEndpoint(null)
+        setNotice('Adding edge failed. You can not add loops')
         return
       }
       if (elements.filter((element) => element.source === selectedEndpoint.id && element.target === node.id).length > 0) {
         setSelectedEndpoint(null)
+        setNotice('Adding edge failed. You can not have multiple edges between vertices')
         return
       }
       if (elements.filter((element) => element.source === node.id && element.target === selectedEndpoint.id).length > 0) {
         setSelectedEndpoint(null)
+        setNotice('Adding edge failed. You can not have multiple edges between vertices')
         return
       }
 
@@ -64,6 +69,7 @@ const App = () => {
         }
       }
       setSelectedEndpoint(null)
+      setNotice('Edge successfully added!')
       setElements((elements) => addEdge(params, elements))
     }
   }
@@ -97,6 +103,9 @@ const App = () => {
 
   return (
     <div>
+      <div>
+        <h1>{notice}</h1>
+      </div>
       <div>
         <button onClick={addVertex}>
           Add Vertex
