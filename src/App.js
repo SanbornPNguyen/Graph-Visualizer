@@ -1,5 +1,7 @@
 import { useState } from 'react'
-import ReactFlow, { addEdge, removeElements } from 'react-flow-renderer'
+import ReactFlow, { addEdge, removeElements, isNode, isEdge } from 'react-flow-renderer'
+
+import TextareaAutosize from 'react-textarea-autosize'
 
 import Vertex from './components/Vertex'
 const nodeTypes = {
@@ -18,6 +20,8 @@ const App = () => {
   const [ elements, setElements ] = useState([])
   const [ selectedEdge, setSelectedEdge ] = useState(null)
   const [ selectedEndpoint, setSelectedEndpoint ] = useState(null)
+  const [ exportGraph, setExport ] = useState('')
+  const [ importGraph, setImport ] = useState('')
 
   const addVertex = () => {
     const id = vertexIDCounter.toString()
@@ -101,6 +105,42 @@ const App = () => {
     setSelectedEndpoint(null)
   }
 
+  const dragStop = (event, node) => {
+    console.log(event, node)
+    let element = elements.filter((element) => element.id === node.id)[0]
+    element.position = {x: node.position.x, y: node.position.y}
+  }
+  
+
+
+
+  const submitExport = () => {
+    let graphExport = ''
+    elements
+      .forEach((element) => {
+      if (isNode(element)) {
+        graphExport = graphExport.concat(`vertex ${element.id} ${element.position.x} ${element.position.y}\n`)
+      } else {
+        graphExport = graphExport.concat(`edge ${element.source} ${element.target}\n`)
+      }
+    })
+    setExport(graphExport)
+    console.log(elements)
+  }
+  
+  const changeImport = (event) => {
+    setImport(event.target.value)
+  }
+  const submitGraph = () => {
+    console.log(importGraph.split('\n'))
+    // Verify correct format
+    // Check vertex or node
+      // If vertex make new vertex and add
+      // If node make new node and add
+    // Clear current elements
+    // Make new elements
+  }
+
   return (
     <div>
       <div>
@@ -123,7 +163,27 @@ const App = () => {
           onClick={deleteEdge}
           onEdgeMouseEnter={initializeDeleteEdge}
           onEdgeMouseLeave={terminateDeleteEdge}
+          onNodeDragStop={dragStop}
         />
+      </div>
+      <div>
+        <h4>{'Export Graph'}</h4>
+        <div>
+        <TextareaAutosize 
+          value={exportGraph}
+        />
+        <button onClick={submitExport}>export</button>
+        </div>
+      </div>
+      <div>
+        <h4>{'Import Graph'}</h4>
+        <div>
+          <TextareaAutosize
+            value={importGraph}
+            onChange={changeImport}
+          />
+          <button onClick={submitGraph}>submit</button>
+        </div>
       </div>
     </div>
   )
