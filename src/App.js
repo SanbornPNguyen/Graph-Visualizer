@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import ReactFlow, { addEdge, removeElements, isNode, isEdge } from 'react-flow-renderer'
+import ReactFlow, { addEdge, removeElements, isNode } from 'react-flow-renderer'
 
 import TextareaAutosize from 'react-textarea-autosize'
 
@@ -110,9 +110,6 @@ const App = () => {
     let element = elements.filter((element) => element.id === node.id)[0]
     element.position = {x: node.position.x, y: node.position.y}
   }
-  
-
-
 
   const submitExport = () => {
     let graphExport = ''
@@ -132,13 +129,63 @@ const App = () => {
     setImport(event.target.value)
   }
   const submitGraph = () => {
-    console.log(importGraph.split('\n'))
+    const graphElements = importGraph.split('\n')
     // Verify correct format
+    for (let i = 0; i < graphElements.length; i++) {
+      const currElement = graphElements[i].split(' ')
+      if (currElement[0] === 'vertex') {
+        if (currElement.length !== 4) {
+          setNotice('Invalid graph import')
+          return false
+        }
+      } else if (currElement[0] === 'edge') {
+        if (currElement.length !== 3) {
+          setNotice('Invalid graph import')
+          return false
+        }
+      } else {
+        setNotice('Invalid graph import')
+        return false
+      }
+    }
     // Check vertex or node
+    clearElements()
+
+    let verticesToAdd = []
+    let edgesToAdd = []
+    for (let i = 0; i < graphElements.length; i++) {
+      const currElement = graphElements[i].split(' ')
       // If vertex make new vertex and add
-      // If node make new node and add
-    // Clear current elements
-    // Make new elements
+      if (currElement[0] === 'vertex') {
+        const newVertex = {
+          id: currElement[1],
+          data: {
+            label: currElement[1],
+            text: currElement[1]
+          },
+          type: 'special',
+          position: {
+            x: currElement[2],
+            y: currElement[3]
+          }
+        }
+        verticesToAdd = verticesToAdd.concat(newVertex)
+        vertexIDCounter += 1
+      // If edge make new edge and add
+      } else if (currElement[0] === 'edge') {
+        const params = {
+          source: currElement[1],
+          target: currElement[2],
+          type: 'straight',
+          style: {
+            stroke: 'rgb(0, 0, 0)',
+            strokeWidth: 3
+          }
+        }
+        edgesToAdd = addEdge(params, edgesToAdd)
+      }
+    }
+    setElements(verticesToAdd.concat(edgesToAdd))
   }
 
   return (
